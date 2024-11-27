@@ -5,26 +5,32 @@
 <link rel="stylesheet" type="text/css" href="~/css/movearquivo.css" /> <!-- Incluindo o CSS -->
 
 <div class="container">
-    <!-- Adicionando a classe de contêiner -->
     <h2>Mesclar Arquivos FASTA</h2>
 
-    <form id="mergeForm" method="post" action="@Url.Action("MesclarArquivos", "Fasta")" class="form-box">
-        <!-- Adicionando a classe do formulário -->
+    <!-- Formulário para upload de arquivos -->
+    <form id="mergeForm" method="post" enctype="multipart/form-data" class="form-box">
         <div class="form-group">
-            <label for="folderPath">Caminho da pasta:</label>
-            <input type="text" id="folderPath" name="folderPath" class="form-control" required placeholder="C:\caminho\para\pasta"> <!-- Usando a classe de controle -->
+            <label for="files">Selecione os arquivos para mesclar:</label>
+            <input type="file" id="files" name="files" class="form-control" multiple required />
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="btn-submit">Mesclar Arquivos</button> <!-- Usando a classe de botão -->
+            <button type="submit" class="btn-submit">Mesclar Arquivos</button>
         </div>
     </form>
 
     @if (ViewBag.Mensagem != null)
     {
-        <div class="success-message">
-            <!-- Usando a classe de mensagem de sucesso -->
+        <div class="alert alert-info">
             <p>@ViewBag.Mensagem</p>
+        </div>
+    }
+
+    @if (ViewBag.FilePath != null)
+    {
+        <!-- Exibe o botão de download se o arquivo mesclado foi criado -->
+        <div style="text-align: center;">
+            <a href="@Url.Action("DownloadArquivo", "Fasta")" class="btn btn-success">Baixar Arquivo Mesclado</a>
         </div>
     }
 </div>

@@ -1,7 +1,16 @@
+using Microsoft.AspNetCore.Http.Features;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Configurações para arquivos grandes
+builder.Services.Configure<FormOptions>(options =>
+{
+    // Define o limite máximo de tamanho para upload de arquivos
+    options.MultipartBodyLengthLimit = 104857600; // 100MB (ajuste conforme necessário)
+});
 
 var app = builder.Build();
 
@@ -9,17 +18,16 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseHsts();  // Habilita HTTP Strict Transport Security (HSTS) para produção
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles();  // Habilita a entrega de arquivos estáticos (necessário para o upload)
 
 app.UseRouting();
+app.UseAuthorization();  // Autoriza usuários para controlar acesso
 
-app.UseAuthorization();
-
+// Mapeia a rota do controlador e a ação padrão
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

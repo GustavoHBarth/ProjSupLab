@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace ProjSupLab.Controllers
 {
@@ -14,17 +15,28 @@ namespace ProjSupLab.Controllers
         }
 
         [HttpPost]
-        public IActionResult MesclarArquivos(string folderPath)
+        public IActionResult MesclarArquivos(IFormFileCollection files)
         {
-            string resultadoPath = Path.Combine(folderPath, "multifasta.fasta");
+            string resultadoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "multifasta.fasta");
 
             try
             {
-                MesclarArquivosFunc(folderPath);
+                if (files != null && files.Count > 0)
+                {
+                    // Chama a função para mesclar os arquivos
+                    MesclarArquivosFunc(files, resultadoPath);
 
-                // Retorna o arquivo mesclado para download
-                var fileBytes = System.IO.File.ReadAllBytes(resultadoPath);
-                return File(fileBytes, "application/octet-stream", "multifasta.fasta");
+                    // Define a mensagem de sucesso
+                    ViewBag.Mensagem = "Arquivos mesclados com sucesso!";
+
+                    // Passando a URL do arquivo para a View para gerar o link de download
+                    ViewBag.FilePath = "/uploads/multifasta.fasta";
+                }
+                else
+                {
+                    ViewBag.Mensagem = "Nenhum arquivo selecionado!";
+                }
+                return View();
             }
             catch (Exception ex)
             {
@@ -33,37 +45,41 @@ namespace ProjSupLab.Controllers
             }
         }
 
-        private void MesclarArquivosFunc(string pasta)
+        private void MesclarArquivosFunc(IFormFileCollection files, string resultadoPath)
         {
-            if (!Directory.Exists(pasta))
+            // Cria ou sobrescreve o arquivo de saída
+            using (var writer = new StreamWriter(resultadoPath))
             {
-                throw new DirectoryNotFoundException($"O caminho da pasta não existe: {pasta}");
-            }
-
-            // Obter arquivos .fasta, .fas e .ab1
-            var arquivosFasta = Directory.GetFiles(pasta, "*.fasta");
-            var arquivosFas = Directory.GetFiles(pasta, "*.fas");
-            var arquivosAB1 = Directory.GetFiles(pasta, "*.ab1");
-
-            // Combinar todos os arrays de arquivos
-            var arquivos = arquivosFasta.Concat(arquivosFas).Concat(arquivosAB1).ToArray();
-
-            if (arquivos.Length == 0)
-            {
-                throw new FileNotFoundException($"Nenhum arquivo FASTA (.fasta, .fas ou .ab1) encontrado na pasta especificada: {pasta}");
-            }
-
-            using (var writer = new StreamWriter(Path.Combine(pasta, "multifasta.fasta")))
-            {
-                foreach (var arquivo in arquivos)
+                foreach (var file in files)
                 {
-                    // Log para verificar os arquivos sendo processados
-                    Console.WriteLine($"Processando arquivo: {arquivo}");
-                    var conteudo = System.IO.File.ReadAllText(arquivo);
-                    writer.WriteLine(conteudo);
-                    writer.WriteLine(); // Adiciona uma linha em branco entre os arquivos
+                    using (var reader = new StreamReader(file.OpenReadStream()))
+                    {
+                        writer.WriteLine(reader.ReadToEnd());
+                        writer.WriteLine(); // Adiciona uma linha em branco entre os arquivos
+                    }
                 }
             }
+        }
+
+        [HttpGet]
+        public IActionResult DownloadArquivo()
+        {
+            string arquivoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "multifasta.fasta");
+
+            // Verifica se o arquivo existe
+            if (!System.IO.File.Exists(arquivoPath))
+            {
+                return NotFound("Arquivo não encontrado.");
+            }
+
+            // Lê o arquivo para envio
+            var fileBytes = System.IO.File.ReadAllBytes(arquivoPath);
+
+            // Exclui o arquivo após o download ser iniciado
+            System.IO.File.Delete(arquivoPath);
+
+            // Retorna o arquivo para o cliente e inicia o download
+            return File(fileBytes, "application/octet-stream", "multifasta.fasta");
         }
     }
 }
