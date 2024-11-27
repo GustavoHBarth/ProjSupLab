@@ -1,0 +1,113 @@
+﻿/* Estilos gerais */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Título */
+h2 {
+    text-align: center;
+    font-size: 28px;
+    color: #444;
+    margin-bottom: 20px;
+}
+
+/* Estilos do formulário */
+.form-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+    .form-control:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    }
+
+/* Estilos para a área de drag and drop */
+.drop-area {
+    border: 2px dashed #ccc; /* Linha pontilhada */
+    padding: 50px; /* Maior padding para dar espaço visual */
+    text-align: center;
+    color: #888;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 18px; /* Tamanho maior da fonte */
+}
+
+    .drop-area::before {
+        content: 'Arraste os arquivos aqui'; /* Texto no meio */
+        color: #555;
+        font-size: 18px;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+
+    .drop-area.highlight {
+        border-color: #800080;
+        background-color: #f0e6f7;
+        color: #000;
+    }
+
+/* Botão de enviar */
+.btn-submit {
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+/* Mensagem de sucesso */
+.success-message {
+    text-align: center;
+    color: green;
+    font-size: 18px;
+    margin-top: 20px;
+}

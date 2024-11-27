@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Mesclar Arquivos FASTA";
+}
+
+<link rel="stylesheet" type="text/css" href="~/css/movearquivo.css" /> <!-- Incluindo o CSS -->
+
+<div class="container">
+    <!-- Adicionando a classe de contêiner -->
+    <h2>Mesclar Arquivos FASTA</h2>
+
+    <form id="mergeForm" method="post" action="@Url.Action("MesclarArquivos", "Fasta")" class="form-box">
+        <!-- Adicionando a classe do formulário -->
+        <div class="form-group">
+            <label for="folderPath">Caminho da pasta:</label>
+            <input type="text" id="folderPath" name="folderPath" class="form-control" required placeholder="C:\caminho\para\pasta"> <!-- Usando a classe de controle -->
+        </div>
+
+        <div style="text-align: center;">
+            <button type="submit" class="btn-submit">Mesclar Arquivos</button> <!-- Usando a classe de botão -->
+        </div>
+    </form>
+
+    @if (ViewBag.Mensagem != null)
+    {
+        <div class="success-message">
+            <!-- Usando a classe de mensagem de sucesso -->
+            <p>@ViewBag.Mensagem</p>
+        </div>
+    }
+</div>
