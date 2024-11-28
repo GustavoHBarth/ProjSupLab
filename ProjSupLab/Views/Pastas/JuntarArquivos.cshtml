@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Juntar Arquivos";
+}
+
+ <h1>Selecione os Arquivos</h1> 
+
+<form asp-controller="Pastas" asp-action="JuntarArquivos" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="files" class="form-label">Escolha os arquivos:</label>
+        <input type="file" name="files" id="files" multiple class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Juntar e Baixar</button>
+</form>

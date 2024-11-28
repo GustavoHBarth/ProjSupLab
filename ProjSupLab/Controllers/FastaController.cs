@@ -60,40 +60,40 @@ namespace ProjSupLab.Controllers
                 }
             }
         }
-[HttpGet]
-public IActionResult DownloadArquivo()
-{
-    string uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-    string arquivoPath = Path.Combine(uploadsDir, "multifasta.fasta");
-
-    // Verifica se o arquivo existe
-    if (!System.IO.File.Exists(arquivoPath))
-    {
-        return NotFound("Arquivo não encontrado.");
-    }
-
-    // Lê o arquivo para envio
-    var fileBytes = System.IO.File.ReadAllBytes(arquivoPath);
-
-    // Exclui o arquivo mesclado e limpa os arquivos de upload
-    try
-    {
-        // Remove o arquivo mesclado
-        System.IO.File.Delete(arquivoPath);
-
-        // Limpa outros arquivos do diretório
-        foreach (var file in Directory.GetFiles(uploadsDir))
+        [HttpGet]
+        public IActionResult DownloadArquivo()
         {
-            System.IO.File.Delete(file);
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Erro ao limpar arquivos: {ex.Message}");
-    }
+            string uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            string arquivoPath = Path.Combine(uploadsDir, "multifasta.fasta");
 
-    // Retorna o arquivo para o cliente e inicia o download
-    return File(fileBytes, "application/octet-stream", "multifasta.fasta");
-}
+            // Verifica se o arquivo existe
+            if (!System.IO.File.Exists(arquivoPath))
+            {
+                return NotFound("Arquivo não encontrado.");
+            }
+
+            // Lê o arquivo para envio
+            var fileBytes = System.IO.File.ReadAllBytes(arquivoPath);
+
+            // Exclui o arquivo mesclado e limpa os arquivos de upload
+            try
+            {
+                // Remove o arquivo mesclado
+                System.IO.File.Delete(arquivoPath);
+
+                // Limpa outros arquivos do diretório
+                foreach (var file in Directory.GetFiles(uploadsDir))
+                {
+                    System.IO.File.Delete(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao limpar arquivos: {ex.Message}");
+            }
+
+            // Retorna o arquivo para o cliente e inicia o download
+            return File(fileBytes, "application/octet-stream", "multifasta.fasta");
+        }
     }
 }
